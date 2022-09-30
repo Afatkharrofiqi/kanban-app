@@ -1,43 +1,48 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const TasksContainer = () => {
+  const [tasks, setTasks] = useState({});
+
+  useEffect(() => {
+    const fetchTasks = () => {
+      fetch("http://localhost:4000/api")
+        .then((res) => res.json())
+        .then((data) => {
+          setTasks(data);
+        });
+    };
+    fetchTasks();
+  }, []);
+
   return (
     <div className="container">
-      <div className="pending__wrapper">
-        <h3>Pending Tasks</h3>
-        <div className="pending__container">
-          <div className="pending__items">
-            <p>Debug the Notification center</p>
-            <p className="comment">
-              <Link to="/comments">2 Comments</Link>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="ongoing__wrapper">
-        <h3>Ongoing Tasks</h3>
-        <div className="ongoing__container">
-          <div className="ongoing__items">
-            <p>Create designs for Novu</p>
-            <p className="comment">
-              <Link to="/comments">Add Comment</Link>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="completed__wrapper">
-        <h3>Completed Tasks</h3>
-        <div className="completed__container">
-          <div className="completed__items">
-            <p>Debug the Notification center</p>
-            <p className="comment">
-              <Link to="/comments">2 Comments</Link>
-            </p>
-          </div>
-        </div>
-      </div>
+      {tasks.length > 0 &&
+        tasks.map((task, index) => {
+          const name = task.title.toLowerCase();
+          return (
+            <div key={index} className={`${name}__wrapper`}>
+              <h3>{name} Tasks</h3>
+              <div className={`${name}__container`}>
+                {task.items.length > 0 &&
+                  task.items.map((item, idx) => {
+                    return (
+                      <div key={idx} className={`${name}__items`}>
+                        <p>{item.title}</p>
+                        <p className="comment">
+                          <Link to="/comments">
+                            {item.comments.length > 0
+                              ? "View Comments"
+                              : "Add Comment"}
+                          </Link>
+                        </p>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          );
+        })}
     </div>
   );
 };
