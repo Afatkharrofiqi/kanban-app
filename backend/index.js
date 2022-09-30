@@ -28,8 +28,8 @@ socketIO.on("connection", (socket) => {
 //👇🏻 Generates a random string
 const fetchID = () => Math.random().toString(36).substring(2, 10);
 //👇🏻 Nested object
-let tasks = {
-  pending: {
+let tasks = [
+  {
     title: "pending",
     items: [
       {
@@ -39,7 +39,7 @@ let tasks = {
       },
     ],
   },
-  ongoing: {
+  {
     title: "ongoing",
     items: [
       {
@@ -55,7 +55,7 @@ let tasks = {
       },
     ],
   },
-  completed: {
+  {
     title: "completed",
     items: [
       {
@@ -71,7 +71,7 @@ let tasks = {
       },
     ],
   },
-};
+];
 
 app.get("/api", (req, res) => {
   res.json(tasks);
