@@ -1,13 +1,8 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const http = require("http");
+const http = require("http").Server(app);
 const PORT = 4000;
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-http.Server(app);
 
 app.use(cors());
 
@@ -17,13 +12,8 @@ const socketIO = require("socket.io")(http, {
   },
 });
 
-socketIO.on("connection", (socket) => {
-  console.log(`${socket.id} user just connected!`);
-  socket.on("disconnect", () => {
-    socket.disconnect();
-    console.log(`A user disconnected`);
-  });
-});
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 //👇🏻 Generates a random string
 const fetchID = () => Math.random().toString(36).substring(2, 10);
@@ -73,10 +63,24 @@ let tasks = [
   },
 ];
 
+//Add this before the app.get() block
+socketIO.on("connection", (socket) => {
+  console.log(`⚡: ${socket.id} user just connected!`);
+
+  socket.on("taskDragged", (data) => {
+    console.log(data);
+  });
+
+  socket.on("disconnect", () => {
+    socket.disconnect();
+    console.log("🔥: A user disconnected");
+  });
+});
+
 app.get("/api", (req, res) => {
   res.json(tasks);
 });
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
