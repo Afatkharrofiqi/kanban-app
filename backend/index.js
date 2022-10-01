@@ -67,6 +67,15 @@ let tasks = [
 socketIO.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
+  socket.on("createTask", (data) => {
+    const newTask = { id: fetchID(), title: data.task, comments: [] };
+
+    // add the task to pending category
+    tasks[0].items.push(newTask);
+
+    socket.emit("tasks", tasks);
+  });
+
   socket.on("taskDragged", (data) => {
     const { source, destination } = data;
 

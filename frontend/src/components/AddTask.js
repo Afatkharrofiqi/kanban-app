@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-const AddTask = () => {
+const AddTask = ({ socket }) => {
   const [task, setTask] = useState("");
 
   const handleAddTodo = (e) => {
     e.preventDefault();
     // Logs the task to the console
-    console.log({ task });
+    socket.emit("createTask", { task });
     setTask("");
   };
 
