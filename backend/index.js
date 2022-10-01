@@ -139,6 +139,15 @@ socketIO.on("connection", (socket) => {
   });
 });
 
+app.get("/", (req, res) => {
+  res.json({
+    hello: "😊",
+    myName: "Achmad Fatkharrofiqi",
+    github: "https://github.com/Afatkharrofiqi",
+    email: "achmadfatkharrofiqi404@gmail.com",
+  });
+});
+
 app.get("/api", (req, res) => {
   res.json(tasks);
 });
