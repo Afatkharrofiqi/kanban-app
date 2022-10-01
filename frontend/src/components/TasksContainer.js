@@ -30,6 +30,10 @@ const TasksContainer = ({ socket }) => {
     fetchTasks();
   }, []);
 
+  useEffect(() => {
+    socket.on("tasks", (data) => setTasks(data));
+  }, [socket]);
+
   return (
     <div className="container">
       <DragDropContext onDragEnd={handleDragEnd}>
