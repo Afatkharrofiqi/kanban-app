@@ -68,7 +68,27 @@ socketIO.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
   socket.on("taskDragged", (data) => {
-    console.log(data);
+    const { source, destination } = data;
+
+    // gets the item that was dragged
+    const taskMoved = tasks.find((task) => task.title === source.droppableId);
+    const itemMoved = taskMoved.items[source.index];
+
+    // remove the item from the its source
+    tasks.map((task) => {
+      if (taskMoved.title === task.title) {
+        task.items.splice(source.index, 1);
+      }
+    });
+
+    // add the item to its destination using its destination index
+    tasks.map((task) => {
+      if (destination.droppableId === task.title) {
+        task.items.splice(destination.index, 0, itemMoved);
+      }
+    });
+
+    socket.emit("tasks", tasks);
   });
 
   socket.on("disconnect", () => {
