@@ -63,7 +63,9 @@ const TasksContainer = ({ socket }) => {
                                 >
                                   <p>{item.title}</p>
                                   <p className="comment">
-                                    <Link to="/comments">
+                                    <Link
+                                      to={`/comments/${task.title}/${item.id}`}
+                                    >
                                       {item.comments.length > 0
                                         ? "View Comments"
                                         : "Add Comment"}
